@@ -9,7 +9,6 @@ try {
 } catch (e) {}
 
 const Application = require('../src').Application,
-      fs = require('fs'),
       http = require('http'),
       Provider = require('nconf').Provider;
 

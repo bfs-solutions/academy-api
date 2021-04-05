@@ -15,7 +15,7 @@ function _setUpRouterParams(router: express.Router,
 
 export function Router(sequelize: sequelize.Sequelize,
                        passport: passport.Passport,
-                       rules: {[key: string]: RouterRule}): express.IRouter<any> {
+                       rules: {[key: string]: RouterRule}): express.IRouter {
 
     let router = express.Router();
 
