@@ -52,8 +52,8 @@ export class CollectionController implements controller.Controller {
         }
 
         // pre-process input parameters before passing them to the store API
-        let start = parseInt(req.query.start) || 0;
-        let items = parseInt(req.query.items) || Infinity;
+        let start = parseInt(req.query.start as unknown as string) || 0;
+        let items = parseInt(req.query.items as unknown as string) || Infinity;
         let links: any = { self: { href: req.originalUrl } };
 
         // provide a prev link if not at the start

@@ -18,7 +18,7 @@ interface EnrollmentInstance extends sequelize.Instance<Enrollment>, Enrollment 
 /** Enrollment model */
 interface EnrollmentModel extends sequelize.Model<EnrollmentInstance, Enrollment> {}
 
-const EnrollmentSchema: sequelize.DefineAttributes = {
+const EnrollmentSchema: sequelize.DefineModelAttributes<Enrollment> = {
     is_repeat: {
         type: sequelize.BOOLEAN,
         allowNull: false
