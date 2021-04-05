@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+"use strict";
+
+// source-map-support package is only installed on development mode and
+// therefore it could be unavailable
+try {
+    require('source-map-support').install();
+} catch (e) {}
+
+const Application = require('../src').Application,
+      fs = require('fs'),
+      https = require('https'),
+      Provider = require('nconf').Provider;
+
+if(require.main === module){
+    const settings = (new Provider())
+        .argv()
+        .env()
+        .file({file: 'etc/config.json'});
+
+    const ssl = settings.get("ssl") || {};
+
+    // TODO: resolve files referenced in settings relative to the config file
+
+    ssl.key = fs.readFileSync(ssl.key || "./etc/ssl/key.pem");
+    ssl.cert = fs.readFileSync(ssl.cert || "./etc/ssl/cert.pem");
+
+    const app = new Application(settings.get()),
+          port = settings.get("PORT") || 443,
+          server = https.createServer(ssl, app.listener);
+
+    // start listening for incoming connections
+    server.listen(port, () => console.log('Listening on port', port));
+}
