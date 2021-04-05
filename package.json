@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w & nodemon ./bin/tsen | bunyan",
-    "gen-self-signed-cert": "openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout etc/ssl/key.pem -out etc/ssl/cert.pem",
-    "start": "./bin/tsen | bunyan",
+    "dev": "tsc -w & nodemon ./bin/academy-api | bunyan",
+    "start": "./bin/academy-api | bunyan",
     "test": "ava"
   },
   "repository": {
