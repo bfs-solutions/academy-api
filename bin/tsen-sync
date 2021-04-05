@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+"use strict";
+
+// source-map-support package is only installed on development mode and
+// therefore it could be unavailable
+try {
+    require('source-map-support').install();
+} catch (e) {}
+
+const Application = require('../src').Application,
+      Provider = require('nconf').Provider;
+
+if(require.main === module){
+    const settings = (new Provider()).argv().env().file({file: 'etc/config.json'});
+
+    const app = new Application(settings.get());
+
+    app.sync(settings.get('sync')).then(
+        () => { console.log('Storage schema sync complete'); process.exit(0); },
+        (err) => { console.log('Storage schema sync failed with error:', err); process.exit(1); }
+    );
+}

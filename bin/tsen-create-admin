@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+"use strict";
+
+// source-map-support package is only installed on development mode and
+// therefore it could be unavailable
+try {
+    require('source-map-support').install();
+} catch (e) {}
+
+const Application = require('../src').Application,
+    Provider = require('nconf').Provider;
+
+if(require.main === module){
+    const settings = (new Provider())
+        .argv()
+        .env()
+        .file({file: 'etc/config.json'});
+
+    let application = new Application(settings.get());
+
+    application.sequelize.models.user.create({
+        login: "admin",
+        password: settings.get("password"),
+        roles: ["user", "administrator"]
+    }).then(
+            () => { console.log('Admin user created'); process.exit(0); },
+            (err) => {
+                console.log('Admin user create failed with error:', err);
+                process.exit(1);
+            }
+        );
+}

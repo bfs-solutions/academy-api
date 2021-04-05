@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      POSTGRES_DB: 'tsen'
+      POSTGRES_USER: 'tsen'
+      POSTGRES_PASSWORD: 'tsen'
+
+  tsen:
+    build: .
+
+    ports:
+      - "4443:443"
+
+    depends_on:
+      - postgres
