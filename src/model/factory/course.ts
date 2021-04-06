@@ -1,36 +1,40 @@
 
-import * as sequelize from "sequelize";
+import { 
+    INTEGER,
+    Model,
+    Sequelize,
+    TEXT
+} from "sequelize";
 
 /** Course */
-interface Course {
-    label?: string;
+interface CourseAttributes {
+    label: string;
 
-    promote_to?: number;
+    promote_to: number;
 }
 
-/** Course instance */
-interface CourseInstance extends sequelize.Instance<Course>, Course {}
+class Course extends Model<CourseAttributes> implements CourseAttributes {
+    public label!: string;
+    promote_to!: number;
 
-/** Course model */
-interface CourseModel extends sequelize.Model<CourseInstance, Course> {}
+    static setRelations(models) {
+        Course.hasMany(models.Edition, {as: "editions", foreignKey: "course"});
+        Course.hasMany(models.Subject, {as: "subjects", foreignKey: "course"});
 
-const CourseSchema: sequelize.DefineAttributes = {
+        Course.hasOne(Course, {as: "promoteTo", foreignKey: "promote_to"});
+    }
+}
+
+const CourseSchema = {
     label: {
-        type: sequelize.TEXT,
+        type: TEXT,
         allowNull: false
     },
-    promote_to: sequelize.INTEGER
+    promote_to: INTEGER
 };
 
-export default function(sequelize: sequelize.Sequelize, name: string = "course"): CourseModel {
-    let Model = <CourseModel>sequelize.define<CourseInstance, Course>(name, CourseSchema);
+export default function(sequelize: Sequelize, name = "course"): typeof Course {
+    Course.init(CourseSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.edition, {as: "editions", foreignKey: "course"});
-        Model.hasMany(models.subject, {as: "subjects", foreignKey: "course"});
-
-        Model.hasOne(Model, {as: "promoteTo", foreignKey: "promote_to"});
-    };
-
-    return Model;
+    return Course;
 }

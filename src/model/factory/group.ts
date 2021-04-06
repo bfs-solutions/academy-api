@@ -1,31 +1,33 @@
 
-import * as sequelize from "sequelize";
+import { 
+    Model,
+    Sequelize,
+    TEXT
+} from "sequelize";
 
 /** Group */
-interface Group {
-    label?: string;
+interface GroupAttributes {
+    label: string;
 }
 
-/** Group instance */
-interface GroupInstance extends sequelize.Instance<Group>, Group {}
+class Group extends Model<GroupAttributes> implements GroupAttributes {
+    label!: string;
 
-/** Group model */
-interface GroupModel extends sequelize.Model<GroupInstance, Group> {}
+    static setRelations(models) {
+        Group.hasMany(models.Enrollment, {as: "enrollments", foreignKey: "group"});
+        Group.hasMany(models.Teaching, {as: "teachings", foreignKey: "group"});
+    }
+}
 
-const GroupSchema: sequelize.DefineAttributes = {
+const GroupSchema = {
     label: {
-        type: sequelize.TEXT,
+        type: TEXT,
         allowNull: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name: string = "group"): GroupModel {
-    let Model = <GroupModel>sequelize.define<GroupInstance, Group>(name, GroupSchema);
+export default function(sequelize: Sequelize, name = "group"): typeof Group {
+    Group.init(GroupSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.enrollment, {as: "enrollments", foreignKey: "group"});
-        Model.hasMany(models.teaching, {as: "teachings", foreignKey: "group"});
-    };
-
-    return Model;
+    return Group;
 }

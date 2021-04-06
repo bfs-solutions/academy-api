@@ -1,34 +1,33 @@
 
 
-import * as sequelize from "sequelize";
+import { 
+    Model,
+    Sequelize,
+    STRING
+} from "sequelize";
 
 /** Component */
-interface Component {
-    label?: string;
+interface ComponentAttributes {
+    label: string;
 }
 
-/** Component instance */
-interface ComponentInstance extends sequelize.Instance<Component>, Component {
+class Component extends Model<ComponentAttributes> implements ComponentAttributes {
+    public label!: string;
+
+    static setRelations(models) {
+        Component.hasMany(models.Grade, {as: "grades", foreignKey: "component"});
+    }
 }
 
-/** Component model */
-interface ComponentModel extends sequelize.Model<ComponentInstance, Component> {
-    findAllStream(options): NodeJS.ReadableStream;
-}
-
-const ComponentSchema: sequelize.DefineAttributes = {
+const ComponentSchema = {
     label: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "component"): ComponentModel {
-    let Model = <ComponentModel>sequelize.define<ComponentInstance, Component>(name, ComponentSchema);
+export default function(sequelize: Sequelize, name= "component"): typeof Component {
+    Component.init(ComponentSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.grade, {as: "grades", foreignKey: "component"});
-    };
-
-    return Model;
+    return Component;
 }

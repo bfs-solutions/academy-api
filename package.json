@@ -1,11 +1,12 @@
 {
-  "name": "tsen",
+  "name": "academy-api",
   "version": "1.2.0",
   "description": "A REST API development stack based on Nodejs and Expressjs, using Sequelize for backend access and Typescript as development language.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -w & nodemon ./bin/academy-api | bunyan",
+    "lint": "eslint . --ext .js,.ts",
+    "start:dev": "nodemon --exec 'ts-node' ./bin/academy-api | bunyan",
     "start": "./bin/academy-api | bunyan",
     "test": "ava"
   },
@@ -22,32 +23,42 @@
   "devDependencies": {
     "@types/body-parser": "0.0.33",
     "@types/compression": "0.0.33",
-    "@types/express": "^4.0.34",
+    "@types/express": "^4.17.11",
+    "@types/node": "^14.14.37",
     "@types/passport": "^0.2.35",
-    "@types/passport-http": "^0.3.2",
-    "@types/sequelize": "^4.0.39",
-    "@types/supertest": "^2.0.0",
-    "ava": "^0.17.0",
-    "nodemon": "^1.11.0",
-    "source-map-support": "^0.4.6",
-    "supertest": "^2.0.1",
-    "tslint": "^4.0.2",
-    "typescript": "^2.2.0-dev.20161206"
+    "@types/passport-http": "^0.3.8",
+    "@types/supertest": "^2.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "ava": "^3.15.0",
+    "eslint": "^7.23.0",
+    "nodemon": "^1.19.4",
+    "source-map-support": "^0.4.18",
+    "supertest": "^6.1.3",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@smart-academy/academy": "git+ssh://git@gitlab.com/smart-academy/academy.git",
     "JSONStream": "^1.2.1",
-    "body-parser": "^1.15.2",
-    "compression": "^1.6.2",
-    "express": "^4.14.0",
-    "express-bunyan-logger": "^1.3.1",
-    "nconf": "^0.8.4",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "express-bunyan-logger": "^1.3.3",
+    "nconf": "^0.8.5",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
-    "pg": "^6.1.0",
-    "pg-schema": "^1.0.1",
-    "require-dir": "^0.3.1",
-    "sequelize": "^3.27.0",
-    "sequelize-cli": "^2.5.1"
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "require-dir": "^0.3.2",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }

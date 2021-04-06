@@ -10,7 +10,7 @@ export function Error(err, req, res: express.Response, next) {
 
 function replaceErrors(key, value) {
     if (value instanceof Error) {
-        let error = {};
+        const error = {};
 
         Object.getOwnPropertyNames(value).forEach(function (key) {
             error[key] = value[key];

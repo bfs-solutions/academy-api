@@ -3,7 +3,7 @@ import * as compression from "compression";
 import * as express from "express";
 import * as passport from "passport";
 import * as passportHttp from "passport-http";
-import * as Sequelize from "sequelize";
+import * as sequelize from "sequelize";
 
 import * as model from "./model";
 import * as web from "./web";
@@ -42,18 +42,18 @@ export class Application {
 
     private _listener: express.Application;
     private _passport: passport.Passport;
-    private _sequelize: Sequelize.Sequelize;
+    private _sequelize: sequelize.Sequelize;
 
     constructor(private _settings: any) {
         this._settings = Object.assign({}, Application.DEFAULT_SETTINGS,
             this._settings);
     }
 
-    public get sequelize(): Sequelize.Sequelize {
+    public get sequelize(): sequelize.Sequelize {
         // lazy load Sequelize
         if (!this._sequelize) {
-            let settings = this._settings.sequelize;
-            this._sequelize = new Sequelize(settings.database, settings.user,
+            const settings = this._settings.sequelize;
+            this._sequelize = new sequelize.Sequelize(settings.database, settings.user,
                 settings.password, settings);
 
             // load all sequelize models
@@ -69,7 +69,7 @@ export class Application {
      * @param options
      * @returns {Promise<any>}
      */
-    public sync(options: Sequelize.SyncOptions): PromiseLike<any> {
+    public sync(options: sequelize.SyncOptions): PromiseLike<any> {
         return this.sequelize.sync(options);
     }
 
@@ -80,7 +80,7 @@ export class Application {
 
             // TODO: this need to be customizable
             this._passport.use(new passportHttp.BasicStrategy(
-                {}, (<any>this.sequelize.models["user"]).authenticate()));
+                {}, (<any>this.sequelize.models.User).authenticate()));
         }
 
         return this._passport;

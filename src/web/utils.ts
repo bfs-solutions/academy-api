@@ -9,7 +9,7 @@ import * as URL from "url";
  * @return {string} The new url string.
  */
 export function makeUpdatedUrl(urlStr: string, query: any = {}): string {
-    let url = URL.parse(urlStr, true);
+    const url = URL.parse(urlStr, true);
 
     // update query parameters
     Object.keys(query).forEach(key => url.query[key] = query[key]);
