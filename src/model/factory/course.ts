@@ -22,7 +22,7 @@ class Course extends Model<CourseAttributes> implements CourseAttributes {
         Course.hasMany(models.Subject, {as: "subjects", foreignKey: "course"});
 
         Course.hasOne(Course, {as: "promoteTo", foreignKey: "promote_to"});
-    };
+    }
 }
 
 const CourseSchema = {
@@ -33,7 +33,7 @@ const CourseSchema = {
     promote_to: INTEGER
 };
 
-export default function(sequelize: Sequelize, name: string = "course"): typeof Course {
+export default function(sequelize: Sequelize, name = "course"): typeof Course {
     Course.init(CourseSchema, { sequelize, tableName: `${name}s` })
 
     return Course;

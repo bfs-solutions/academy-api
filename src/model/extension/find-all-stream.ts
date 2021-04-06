@@ -22,7 +22,7 @@ export function FindAllStream(Model: sequelize.ModelCtor<any>) {
         return new stream.Readable({
             objectMode: true,
             read: function () {
-                let self = this;
+                const self = this;
 
                 self.pause();
 

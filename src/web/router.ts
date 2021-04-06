@@ -15,7 +15,7 @@ export function Router(sequelize: sequelize.Sequelize,
                        passport: passport.Passport,
                        rules: {[key: string]: RouterRule}): express.IRouter {
 
-    let router = express.Router();
+    const router = express.Router();
 
     // route requests for the root resource
     (new controller.RootResourceController(Object.keys(sequelize.models)))
@@ -29,7 +29,7 @@ export function Router(sequelize: sequelize.Sequelize,
         const pathName = name.toLowerCase();
 
         // prepare router rule for this model
-        let rule = Object.assign({}, rules["default"], rules[pathName] || {});
+        const rule = Object.assign({}, rules["default"], rules[pathName] || {});
 
         // route requests for model resources
         _setUpRouterParams(
@@ -44,7 +44,7 @@ export function Router(sequelize: sequelize.Sequelize,
 
         // route requests for model relations
         Object.keys((<any>sequelize.models[name]).associations).forEach(key => {
-            let association = (<any>sequelize.models[name]).associations[key];
+            const association = (<any>sequelize.models[name]).associations[key];
 
             if (association.associationType === "HasMany") {
                 // route requests for associated model collection

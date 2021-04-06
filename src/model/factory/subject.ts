@@ -34,7 +34,7 @@ const SubjectSchema = {
     }
 };
 
-export default function(sequelize: Sequelize, name: string = "subject"): typeof Subject {
+export default function(sequelize: Sequelize, name = "subject"): typeof Subject {
     Subject.init(SubjectSchema, { sequelize, tableName: `${name}s` })
 
     return Subject;

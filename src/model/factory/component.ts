@@ -16,7 +16,7 @@ class Component extends Model<ComponentAttributes> implements ComponentAttribute
 
     static setRelations(models) {
         Component.hasMany(models.Grade, {as: "grades", foreignKey: "component"});
-    };
+    }
 }
 
 const ComponentSchema = {

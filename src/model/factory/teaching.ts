@@ -6,7 +6,7 @@ interface TeachingAttributes {}
 
 class Teaching extends Model<TeachingAttributes> implements TeachingAttributes {}
 
-export default function(sequelize: Sequelize, name: string = "teaching"): typeof Teaching {
+export default function(sequelize: Sequelize, name = "teaching"): typeof Teaching {
     Teaching.init({}, { sequelize, tableName: `${name}s` })
 
     return Teaching;

@@ -22,7 +22,7 @@ export class Loader {
 
         // load all models
         Object.keys(factories).forEach(name => {
-            let Model = factories[name].default(sequelize, settings[name]);
+            const Model = factories[name].default(sequelize, settings[name]);
 
             // apply all model extensions
             extension.FindAllStream(Model);

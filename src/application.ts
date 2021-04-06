@@ -52,7 +52,7 @@ export class Application {
     public get sequelize(): sequelize.Sequelize {
         // lazy load Sequelize
         if (!this._sequelize) {
-            let settings = this._settings.sequelize;
+            const settings = this._settings.sequelize;
             this._sequelize = new sequelize.Sequelize(settings.database, settings.user,
                 settings.password, settings);
 

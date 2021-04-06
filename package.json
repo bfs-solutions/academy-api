@@ -1,10 +1,11 @@
 {
-  "name": "tsen",
+  "name": "academy-api",
   "version": "1.2.0",
   "description": "A REST API development stack based on Nodejs and Expressjs, using Sequelize for backend access and Typescript as development language.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint . --ext .js,.ts",
     "start:dev": "nodemon --exec 'ts-node' ./bin/academy-api | bunyan",
     "start": "./bin/academy-api | bunyan",
     "test": "ava"
@@ -26,13 +27,15 @@
     "@types/node": "^14.14.37",
     "@types/passport": "^0.2.35",
     "@types/passport-http": "^0.3.8",
-    "@types/supertest": "^2.0.0",
-    "ava": "^0.17.0",
+    "@types/supertest": "^2.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "ava": "^3.15.0",
+    "eslint": "^7.23.0",
     "nodemon": "^1.19.4",
     "source-map-support": "^0.4.18",
-    "supertest": "^2.0.1",
+    "supertest": "^6.1.3",
     "ts-node": "^9.1.1",
-    "tslint": "^4.0.2",
     "typescript": "^4.2.3"
   },
   "dependencies": {
@@ -48,6 +51,14 @@
     "pg-hstore": "^2.3.3",
     "require-dir": "^0.3.2",
     "sequelize": "^6.6.2",
-    "sequelize-cli": "^2.5.1"
+    "sequelize-cli": "^6.2.0"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }

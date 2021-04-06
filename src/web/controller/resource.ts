@@ -48,7 +48,7 @@ export class ResourceController implements controller.Controller {
      * @see controller.Controller.params
      */
     public get params () {
-        let params = {};
+        const params = {};
 
         params[this.name] = this.item.bind(this);
 
@@ -108,7 +108,7 @@ export class ResourceController implements controller.Controller {
 
         // provide a link to each relation
         Object.keys((<any>this.model).associations).forEach(name => {
-            let association = (<any>this.model).associations[name];
+            const association = (<any>this.model).associations[name];
 
             if (association.associationType === "HasMany") {
                 outStream = outStream.pipe(new transform.HALLinkProvider({
@@ -148,7 +148,7 @@ export class ResourceController implements controller.Controller {
             error = null;
 
         for (let i = 0; i < (<Array<patch.Patch>>req.body).length; i++) {
-            let patch = (<Array<patch.Patch>>req.body)[i],
+            const patch = (<Array<patch.Patch>>req.body)[i],
                 attr = patch.path.split("/").pop();
             switch (patch.op) {
                 case "replace":

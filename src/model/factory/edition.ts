@@ -18,7 +18,7 @@ class Edition extends Model<EditionAttributes> implements EditionAttributes {
 
     static setRelations(models) {
         Edition.hasMany(models.Group, {as: "groups", foreignKey: "edition"});
-    };
+    }
 }
 
 const EditionSchema = {

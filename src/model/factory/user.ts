@@ -44,7 +44,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
      * Override is needed to hide sensitive data from Web clients.
      */
     toJSON() {
-        let values = Object.assign({}, this.get());
+        const values = Object.assign({}, this.get());
 
         delete values.password;
         delete values.salt;
@@ -52,7 +52,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
     }
 
     authenticate(password, done) {
-        let self = this;
+        const self = this;
 
         // prevent authenticating disabled accounts
         if (this.get("disabled")) {
@@ -83,7 +83,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
     }
 
     static authenticate() {
-        let self = this;
+        const self = this;
         return function (username, password, cb) {
             self.findByPk(username).then(user => {
                 if (user) {
@@ -113,7 +113,7 @@ function applyCrypto(settings: any, instance: User, options) {
             // end early if an error has occurred
             if (err) { return reject(err); }
     
-            let salt = buf.toString("hex");
+            const salt = buf.toString("hex");
     
             crypto.pbkdf2(instance.get("password"), salt, settings.iterations || 12000, settings.keylen || 512, "sha512", (err, hashRaw) => {
     

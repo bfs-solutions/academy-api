@@ -26,7 +26,7 @@ const GroupSchema = {
     }
 };
 
-export default function(sequelize: Sequelize, name: string = "group"): typeof Group {
+export default function(sequelize: Sequelize, name = "group"): typeof Group {
     Group.init(GroupSchema, { sequelize, tableName: `${name}s` })
 
     return Group;
