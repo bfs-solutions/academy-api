@@ -1,52 +1,57 @@
 
-import * as sequelize from "sequelize";
-
-import * as enrollment from "./enrollment";
+import { 
+    Model,
+    Sequelize,
+    STRING,
+    TEXT
+} from "sequelize";
 
 /** Institution */
-interface Institution {
-    name?: string;
-    province?: string;
-    canton?: string;
-    parish?: string;
-    type?: string;
+interface InstitutionAttributes {
+    name: string;
+    province: string;
+    canton: string;
+    parish: string;
+    type: string;
 }
 
-/** Institution instance */
-interface InstitutionInstance extends sequelize.Instance<Institution>, Institution {}
+class Institution extends Model<InstitutionAttributes> implements InstitutionAttributes {
+    name!: string;
+    province!: string;
+    canton!: string;
+    parish!: string;
+    type!: string;
 
-/** Course model */
-export interface InstitutionModel extends sequelize.Model<InstitutionInstance, Institution> {}
+    static setRelations(models) {
+        Institution.hasMany(models.Enrollment, {as: "enrollments", foreignKey: "institution"});
+    }
+}
 
-const InstitutionSchema: sequelize.DefineAttributes = {
+const InstitutionSchema = {
     name: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     },
     province: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     },
     canton: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     },
     parish: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     },
     type: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "institution"): InstitutionModel {
-    let Model =  <InstitutionModel>sequelize.define<InstitutionInstance, Institution>(name, InstitutionSchema);
+export default function(sequelize: Sequelize, name= "institution"): typeof Institution {
+    Institution.init(InstitutionSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.enrollment, {as: "enrollments", foreignKey: "institution"});
-    };
-
-    return Model;
+    return Institution;
 }

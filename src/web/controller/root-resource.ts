@@ -12,14 +12,9 @@ export class RootResourceController implements controller.Controller {
 
     public setUpRoute(route) {
 
-        route.get(RootResourceController.redirectBrowserToUiClient, this.get.bind(this));
+        route.get(this.get.bind(this));
 
         return this;
-    }
-
-    static redirectBrowserToUiClient(req: express.Request, res: express.Response, next: Function) {
-        if (req.accepts(["text/html"])) { res.redirect("/academy"); res.end(); }
-        else { next(); }
     }
 
     protected get(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -45,8 +40,8 @@ export class RootResourceController implements controller.Controller {
         // provide a link to each relation
         this.models.forEach(name => {
             outStream = outStream.pipe(new transform.HALLinkProvider({
-                relation: `has-${name}s`,
-                operator: () => `/${name}s`
+                relation: `has-${name.toLowerCase()}s`,
+                operator: () => `/${name.toLowerCase()}s`
             }));
         });
 

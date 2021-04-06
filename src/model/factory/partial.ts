@@ -1,32 +1,32 @@
 
-
-import * as sequelize from "sequelize";
+import { 
+    Model,
+    Sequelize,
+    STRING
+} from "sequelize";
 
 /** Partial */
-interface Partial {
-    label?: string;
+interface PartialAttributes {
+    label: string;
 }
 
-/** Partial instance */
-interface PartialInstance extends sequelize.Instance<Partial>, Partial {
+class Partial extends Model<PartialAttributes> implements PartialAttributes {
+    label!: string;
+
+    static setRelations(models) {
+        Partial.hasMany(models.Component, {as: "components", foreignKey: "partial"});
+    }
 }
 
-/** Partial model */
-interface PartialModel extends sequelize.Model<PartialInstance, Partial> {}
-
-const PartialSchema: sequelize.DefineAttributes = {
+const PartialSchema = {
     label: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "partial"): PartialModel {
-    let Model = <PartialModel>sequelize.define<PartialInstance, Partial>(name, PartialSchema);
+export default function(sequelize: Sequelize, name= "partial"): typeof Partial {
+    Partial.init(PartialSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.component, {as: "components", foreignKey: "partial"});
-    };
-
-    return Model;
+    return Partial;
 }

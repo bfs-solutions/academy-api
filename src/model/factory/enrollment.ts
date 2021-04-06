@@ -1,41 +1,49 @@
 
 
-import * as sequelize from "sequelize";
+import { 
+    BOOLEAN,
+    Model,
+    Sequelize,
+    TEXT
+} from "sequelize";
 
 /** Enrollment */
-interface Enrollment {
-    id?: number;
-    group?: number;
-    student?: number;
+interface EnrollmentAttributes {
+    // id: number;
+    // group: number;
+    // student: number;
     is_repeat: boolean;
     meet_requirements: boolean;
-    observations?: string;
+    observations: string;
 }
 
-/** Enrollment instance */
-interface EnrollmentInstance extends sequelize.Instance<Enrollment>, Enrollment {}
+class Enrollment extends Model<EnrollmentAttributes> implements EnrollmentAttributes {
+    // id!: number;
+    // group!: number;
+    // student!: number;
+    is_repeat!: boolean;
+    meet_requirements!: boolean;
+    observations!: string;
 
-/** Enrollment model */
-interface EnrollmentModel extends sequelize.Model<EnrollmentInstance, Enrollment> {}
+    static setRelations(models) {
+        Enrollment.hasMany(models.Grade, {as: "grades", foreignKey: "enrollment"});
+    }
+}
 
-const EnrollmentSchema: sequelize.DefineModelAttributes<Enrollment> = {
+const EnrollmentSchema = {
     is_repeat: {
-        type: sequelize.BOOLEAN,
+        type: BOOLEAN,
         allowNull: false
     },
     meet_requirements: {
-        type: sequelize.BOOLEAN,
+        type: BOOLEAN,
         allowNull: false
     },
-    observations: sequelize.TEXT
+    observations: TEXT
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "enrollment"): EnrollmentModel {
-    let Model = <EnrollmentModel>sequelize.define<EnrollmentInstance, Enrollment>(name, EnrollmentSchema);
+export default function(sequelize: Sequelize, name= "enrollment"): typeof Enrollment {
+    Enrollment.init(EnrollmentSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.grade, {as: "grades", foreignKey: "enrollment"});
-    };
-
-    return Model;
+    return Enrollment;
 }
