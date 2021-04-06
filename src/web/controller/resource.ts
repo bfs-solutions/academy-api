@@ -17,9 +17,9 @@ export class ResourceController implements controller.Controller {
      */
     private name: string;
 
-    constructor(private model: sequelize.Model<any, any>, private methods: Array<Method>) {
+    constructor(private model: sequelize.ModelCtor<any>, private methods: Array<Method>) {
 
-        this.name = (<any>this.model).name;
+        this.name = (<any>this.model).name.toLowerCase();
     }
 
     /** Set up an Express route
@@ -62,7 +62,7 @@ export class ResourceController implements controller.Controller {
     protected item(req: express.Request, res: express.Response,
                    next: express.NextFunction, id: string) {
 
-        this.model.findById(id).then((instance) => {
+        this.model.findByPk(id).then((instance) => {
                 if (!instance) {
                     const error = new Error("Not Found");
 
@@ -79,7 +79,7 @@ export class ResourceController implements controller.Controller {
         );
     }
 
-    protected resource(req: express.Request): sequelize.Instance<any> {
+    protected resource(req: express.Request): sequelize.Model<any> {
         return (<any>req)[this.name];
     }
 
@@ -102,7 +102,7 @@ export class ResourceController implements controller.Controller {
         outStream = inStream
             .pipe(new transform.HALLinkProvider({
                 relation: "self",
-                operator: (instance) => `/${this.name}s/${instance.id}`
+                operator: (instance) => `/${this.name}s/${instance[this.model.primaryKeyAttributes[0]]}`
             }));
 
 
@@ -113,7 +113,7 @@ export class ResourceController implements controller.Controller {
             if (association.associationType === "HasMany") {
                 outStream = outStream.pipe(new transform.HALLinkProvider({
                     relation: `${this.name}-has-${name}`,
-                    operator: (instance) => `/${this.name}s/${instance.id}/${name}`
+                    operator: (instance) => `/${this.name}s/${instance[this.model.primaryKeyAttributes[0]]}/${name}`
                 }));
             }
         });

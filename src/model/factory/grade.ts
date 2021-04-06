@@ -1,23 +1,24 @@
 
-import * as sequelize from "sequelize";
+import { FLOAT, Model, Sequelize } from "sequelize";
 
 /** Grade */
-interface Grade {
-    value?: number;
+interface GradeAttributes {
+    value: number;
 }
 
-/** Grade instance */
-interface GradeInstance extends sequelize.Instance<Grade>, Grade {}
+class Grade extends Model<GradeAttributes> implements GradeAttributes {
+    value!: number;
+}
 
-interface GradeModel extends sequelize.Model<GradeInstance, Grade> {}
-
-const GradeSchema: sequelize.DefineAttributes = {
+const GradeSchema = {
     value: {
-        type: sequelize.FLOAT,
+        type: FLOAT,
         allowNull: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "grade"): GradeModel {
-    return <GradeModel>sequelize.define<GradeInstance, Grade>(name, GradeSchema);
+export default function(sequelize: Sequelize, name= "grade"): typeof Grade {
+    Grade.init(GradeSchema, { sequelize, tableName: `${name}s` })
+
+    return Grade;
 }

@@ -12,7 +12,7 @@ export class InstanceToJson extends stream.Transform {
         super(options);
     }
 
-    _transform(row: sequelize.Instance<any>, _, done){
+    _transform(row: sequelize.Model<any>, _, done){
         this.push(row.toJSON());
         done();
     }

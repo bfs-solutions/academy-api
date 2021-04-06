@@ -19,7 +19,7 @@ if(require.main === module){
 
     let application = new Application(settings.get());
 
-    application.sequelize.models.user.create({
+    application.sequelize.models.User.create({
         login: "admin",
         password: settings.get("password"),
         roles: ["user", "administrator"]

@@ -1,37 +1,41 @@
 
-import * as sequelize from "sequelize";
+import { 
+    BOOLEAN,
+    Model,
+    Sequelize,
+    TEXT
+} from "sequelize";
 
 /** Subject */
-interface Subject {
-    label?: string;
-    qualitative?: boolean;
+interface SubjectAttributes {
+    label: string;
+    qualitative: boolean;
 }
 
-/** Subject instance */
-interface SubjectInstance extends sequelize.Instance<Subject>, Subject {}
+class Subject extends Model<SubjectAttributes> implements SubjectAttributes {
+    label!: string;
+    qualitative!: boolean;
 
-/** Subject model */
-interface SubjectModel extends sequelize.Model<SubjectInstance, Subject> {}
+    static setRelations(models) {
+        Subject.hasMany(models.Half, {as: "halves", foreignKey: "subject"});
+        Subject.hasMany(models.Teaching, {as: "teachings", foreignKey: "subject"});
+    }
+}
 
-const SubjectSchema: sequelize.DefineAttributes = {
+const SubjectSchema = {
     label: {
-        type: sequelize.TEXT,
+        type: TEXT,
         allowNull: false
     },
     qualitative: {
-        type: sequelize.BOOLEAN,
+        type: BOOLEAN,
         allowNull: false,
         defaultValue: false
     }
 };
 
-export default function(sequelize: sequelize.Sequelize, name: string = "subject"): SubjectModel {
-    let Model = <SubjectModel>sequelize.define<SubjectInstance, Subject>(name, SubjectSchema);
+export default function(sequelize: Sequelize, name: string = "subject"): typeof Subject {
+    Subject.init(SubjectSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.half, {as: "halves", foreignKey: "subject"});
-        Model.hasMany(models.teaching, {as: "teachings", foreignKey: "subject"});
-    };
-
-    return Model;
+    return Subject;
 }

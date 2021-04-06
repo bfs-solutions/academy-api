@@ -17,9 +17,9 @@ export class CollectionController implements controller.Controller {
      */
     private name: string;
 
-    constructor(private model: sequelize.Model<any, any>, private methods: Array<Method>) {
+    constructor(private model: sequelize.ModelCtor<any>, private methods: Array<Method>) {
 
-        this.name = (<any>this.model).name;
+        this.name = (<any>this.model).name.toLowerCase();
     }
 
     /** Set up an Express route
@@ -85,7 +85,7 @@ export class CollectionController implements controller.Controller {
             .pipe(new transform.InstanceToJson())
             .pipe(new transform.HALLinkProvider({
                 relation: "self",
-                operator: (instance) => `/${this.name}s/${instance.id}`
+                operator: (instance) => `/${this.name}s/${instance[this.model.primaryKeyAttributes[0]]}`
             }));
 
         // provide a link to each relation
@@ -95,7 +95,7 @@ export class CollectionController implements controller.Controller {
             if (association.associationType === "HasMany") {
                 instanceStream = instanceStream.pipe(new transform.HALLinkProvider({
                     relation: `${this.name}-has-${name}`,
-                    operator: (instance) => `/${this.name}s/${instance.id}/${name}`
+                    operator: (instance) => `/${this.name}s/${instance[this.model.primaryKeyAttributes[0]]}/${name}`
                 }));
             }
         });

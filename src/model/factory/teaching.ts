@@ -1,17 +1,13 @@
 
-import * as sequelize from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
 /** Teaching */
-interface Teaching {}
+interface TeachingAttributes {}
 
-/** Teaching instance */
-interface TeachingInstance extends sequelize.Instance<Teaching>, Teaching {}
+class Teaching extends Model<TeachingAttributes> implements TeachingAttributes {}
 
-/** Teaching model */
-interface TeachingModel extends sequelize.Model<TeachingInstance, Teaching> {}
+export default function(sequelize: Sequelize, name: string = "teaching"): typeof Teaching {
+    Teaching.init({}, { sequelize, tableName: `${name}s` })
 
-const TeachingSchema: sequelize.DefineAttributes = {};
-
-export default function(sequelize: sequelize.Sequelize, name: string = "teaching"): TeachingModel {
-    return <TeachingModel>sequelize.define<TeachingInstance, Teaching>(name, TeachingSchema);
+    return Teaching;
 }

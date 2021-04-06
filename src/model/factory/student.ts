@@ -1,17 +1,23 @@
 
-import * as sequelize from "sequelize";
+import { 
+    DATE,
+    Model,
+    Sequelize,
+    STRING,
+    TEXT
+} from "sequelize";
 
 /** Student */
-interface Student {
-    name?: string;
+interface StudentAttributes {
+    name: string;
 
-    nationality?: string;
+    nationality: string;
 
-    phone?: string;
+    phone: string;
 
-    occupation?: string;
+    occupation: string;
 
-    work_place?: string;
+    work_place: string;
 
     /* national unique identifier, it is not used as record unique identifier
      because in some countries (for example Ecuador) is not required for
@@ -20,59 +26,107 @@ interface Student {
 
      See here https://educacion.gob.ec/ministerio-de-educacion-reitera-que-no-es-obligatorio-que-los-estudiantes-presenten-cedulas-de-identidad-en-las-instituciones-educativas/
      */
-    nid?: string;
+    nid: string;
 
-    birth_date?: Date;
+    birth_date: Date;
 
-    sex?: string;
+    sex: string;
 
-    birth_place?: string;
+    birth_place: string;
 
-    father_name?: string;
+    father_name: string;
 
-    father_phone?: string;
+    father_phone: string;
 
-    father_address?: string;
+    father_address: string;
 
-    father_profession?: string;
+    father_profession: string;
 
-    mother_name?: string;
+    mother_name: string;
 
-    mother_phone?: string;
+    mother_phone: string;
 
-    mother_address?: string;
+    mother_address: string;
 
-    mother_profession?: string;
+    mother_profession: string;
 
-    legal_guardian_name?: string;
+    legal_guardian_name: string;
 
-    legal_guardian_phone?: string;
+    legal_guardian_phone: string;
 
-    legal_guardian_address?: string;
+    legal_guardian_address: string;
 
-    legal_guardian_profession?: string;
+    legal_guardian_profession: string;
 }
 
-/** Student instance */
-interface StudentInstance extends sequelize.Instance<Student>, Student {}
+class Student extends Model<StudentAttributes> implements StudentAttributes {
+    name!: string;
 
-interface StudentModel extends sequelize.Model<StudentInstance, Student> {
-    findAllStream(options): NodeJS.ReadableStream;
+    nationality!: string;
+
+    phone!: string;
+
+    occupation!: string;
+
+    work_place!: string;
+
+    /* national unique identifier, it is not used as record unique identifier
+     because in some countries (for example Ecuador) is not required for
+     the student to have the NID in order to register him with the Academic
+     Management System of a school.
+
+     See here https://educacion.gob.ec/ministerio-de-educacion-reitera-que-no-es-obligatorio-que-los-estudiantes-presenten-cedulas-de-identidad-en-las-instituciones-educativas/
+     */
+    nid!: string;
+
+    birth_date!: Date;
+
+    sex!: string;
+
+    birth_place!: string;
+
+    father_name!: string;
+
+    father_phone!: string;
+
+    father_address!: string;
+
+    father_profession!: string;
+
+    mother_name!: string;
+
+    mother_phone!: string;
+
+    mother_address!: string;
+
+    mother_profession!: string;
+
+    legal_guardian_name!: string;
+
+    legal_guardian_phone!: string;
+
+    legal_guardian_address!: string;
+
+    legal_guardian_profession!: string;
+
+    static setRelations(models) {
+        Student.hasMany(models.Enrollment, {as: "enrollments", foreignKey: "student"});
+    }
 }
 
-const StudentSchema: sequelize.DefineAttributes = {
+const StudentSchema = {
     name: {
-        type: sequelize.STRING,
+        type: STRING,
         allowNull: false
     },
 
-    nationality: sequelize.STRING,
+    nationality: STRING,
 
-    phone: sequelize.STRING,
+    phone: STRING,
 
-    occupation: sequelize.STRING,
+    occupation: STRING,
 
-    work_place: sequelize.TEXT,
+    work_place: TEXT,
 
     /* national unique identifier, it is not used as record unique identifier
      because in some countries (for example Ecuador) is not required for
@@ -81,51 +135,47 @@ const StudentSchema: sequelize.DefineAttributes = {
 
      See here https://educacion.gob.ec/ministerio-de-educacion-reitera-que-no-es-obligatorio-que-los-estudiantes-presenten-cedulas-de-identidad-en-las-instituciones-educativas/
      */
-    nid: sequelize.STRING,
+    nid: STRING,
 
-    birth_date: sequelize.DATE,
+    birth_date: DATE,
 
-    sex: sequelize.STRING(1),
+    sex: STRING(1),
 
-    birth_place: sequelize.TEXT,
+    birth_place: TEXT,
 
-    father_name: sequelize.STRING,
+    father_name: STRING,
 
-    father_phone: sequelize.STRING,
+    father_phone: STRING,
 
-    father_address: sequelize.TEXT,
+    father_address: TEXT,
 
-    father_profession: sequelize.STRING,
+    father_profession: STRING,
 
-    father_email: sequelize.STRING,
+    father_email: STRING,
 
-    mother_name: sequelize.STRING,
+    mother_name: STRING,
 
-    mother_phone: sequelize.STRING,
+    mother_phone: STRING,
 
-    mother_address: sequelize.TEXT,
+    mother_address: TEXT,
 
-    mother_profession: sequelize.STRING,
+    mother_profession: STRING,
 
-    mother_email: sequelize.STRING,
+    mother_email: STRING,
 
-    legal_guardian_name: sequelize.STRING,
+    legal_guardian_name: STRING,
 
-    legal_guardian_phone: sequelize.STRING,
+    legal_guardian_phone: STRING,
 
-    legal_guardian_address: sequelize.TEXT,
+    legal_guardian_address: TEXT,
 
-    legal_guardian_profession: sequelize.STRING,
+    legal_guardian_profession: STRING,
 
-    legal_guardian_email: sequelize.STRING,
+    legal_guardian_email: STRING,
 };
 
-export default function (sequelize: sequelize.Sequelize, name= "student"): StudentModel {
-    let Model = <StudentModel>sequelize.define<StudentInstance, Student>(name, StudentSchema);
+export default function (sequelize: Sequelize, name= "student"): typeof Student {
+    Student.init(StudentSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.enrollment, {as: "enrollments", foreignKey: "student"});
-    };
-
-    return Model;
+    return Student;
 }

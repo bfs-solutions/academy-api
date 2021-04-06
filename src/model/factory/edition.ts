@@ -1,33 +1,36 @@
 
-
-import * as sequelize from "sequelize";
+import { 
+    DATE,
+    Model,
+    NOW,
+    Sequelize
+} from "sequelize";
 
 /** Edition */
-interface Edition {
-    date_start?: Date;
-    date_end?: Date;
+interface EditionAttributes {
+    date_start: Date;
+    date_end: Date;
 }
 
-/** Edition instance */
-interface EditionInstance extends sequelize.Instance<Edition>, Edition {}
+class Edition extends Model<EditionAttributes> implements EditionAttributes {
+    date_start!: Date;
+    date_end!: Date;
 
-/** Edition model */
-interface EditionModel extends sequelize.Model<EditionInstance, Edition> {}
+    static setRelations(models) {
+        Edition.hasMany(models.Group, {as: "groups", foreignKey: "edition"});
+    };
+}
 
-const EditionSchema: sequelize.DefineAttributes = {
+const EditionSchema = {
     date_start: {
-        type: sequelize.DATE,
-        defaultValue: sequelize.NOW
+        type: DATE,
+        defaultValue: NOW
     },
-    date_end: sequelize.DATE
+    date_end: DATE
 };
 
-export default function(sequelize: sequelize.Sequelize, name= "edition"): EditionModel {
-    let Model = <EditionModel>sequelize.define<EditionInstance, Edition>(name, EditionSchema);
+export default function(sequelize: Sequelize, name= "edition"): typeof Edition {
+    Edition.init(EditionSchema, { sequelize, tableName: `${name}s` })
 
-    (<any>Model).setRelations = function (models) {
-        Model.hasMany(models.group, {as: "groups", foreignKey: "edition"});
-    };
-
-    return Model;
+    return Edition;
 }

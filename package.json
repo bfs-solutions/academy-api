@@ -36,7 +36,6 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@smart-academy/academy": "git+ssh://git@gitlab.com/smart-academy/academy.git",
     "JSONStream": "^1.2.1",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
