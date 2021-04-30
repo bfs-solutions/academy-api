@@ -1,5 +1,6 @@
 
 import * as compression from "compression";
+import * as cors from "cors";
 import * as express from "express";
 import * as passport from "passport";
 import * as passportHttp from "passport-http";
@@ -104,6 +105,7 @@ export class Application {
                 );
 
             this._listener.use(require("express-bunyan-logger")());
+            this._listener.use(cors());
             this._listener.use(compression());
             this._listener.use(this.passport.initialize());
 
